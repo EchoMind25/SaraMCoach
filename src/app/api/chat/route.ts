@@ -102,29 +102,50 @@ export async function POST(request: Request) {
     return Response.json({ reply: FALLBACK_REPLY, demo: true });
   }
 
-  try {
-    const client = new Anthropic({ apiKey });
-    const completion = await client.messages.create({
-      model: MODEL,
-      max_tokens: 300,
-      system: buildSystemPrompt(),
-      messages: messages.slice(-10).map((m) => ({
-        role: m.role,
-        content: String(m.content ?? "").slice(0, 2000),
-      })),
-    });
+  // Key present → stream the reply token-by-token as plain text. The demo
+  // (no-key) and 429 paths above stay JSON, so the client branches on the
+  // response Content-Type. Model, system prompt, max_tokens, and the 10-message
+  // slice are unchanged from the non-streaming version.
+  const client = new Anthropic({ apiKey });
+  const trimmed = messages.slice(-10).map((m) => ({
+    role: m.role,
+    content: String(m.content ?? "").slice(0, 2000),
+  }));
+  const encoder = new TextEncoder();
 
-    let reply = FALLBACK_REPLY;
-    for (const block of completion.content) {
-      if (block.type === "text" && block.text.trim()) {
-        reply = block.text.trim();
-        break;
+  const stream = new ReadableStream<Uint8Array>({
+    async start(controller) {
+      let emitted = false;
+      try {
+        const llmStream = client.messages.stream({
+          model: MODEL,
+          max_tokens: 300,
+          system: buildSystemPrompt(),
+          messages: trimmed,
+        });
+        llmStream.on("text", (delta) => {
+          if (delta) {
+            emitted = true;
+            controller.enqueue(encoder.encode(delta));
+          }
+        });
+        await llmStream.finalMessage();
+      } catch (error) {
+        // Streaming has already committed a 200 — we can't switch to a JSON
+        // error. Emit the graceful fallback text so the widget still replies.
+        console.error("[/api/chat] Claude stream failed:", error);
+      } finally {
+        if (!emitted) controller.enqueue(encoder.encode(FALLBACK_REPLY));
+        controller.close();
       }
-    }
+    },
+  });
 
-    return Response.json({ reply });
-  } catch (error) {
-    console.error("[/api/chat] Claude request failed:", error);
-    return Response.json({ reply: FALLBACK_REPLY, error: true }, { status: 200 });
-  }
+  return new Response(stream, {
+    headers: {
+      "Content-Type": "text/plain; charset=utf-8",
+      "X-Content-Type-Options": "nosniff",
+      "Cache-Control": "no-store",
+    },
+  });
 }

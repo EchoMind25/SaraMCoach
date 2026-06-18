@@ -122,10 +122,17 @@ export function LeadAssistant() {
     setStep("email");
   }, [aiSay]);
 
+  // Sends the history to /api/chat and renders the reply. The route streams
+  // plain text when a key is set (tokens appended to an in-flight AI bubble,
+  // typing indicator held until the first token) and returns JSON otherwise
+  // (demo fallback / 429) — we branch on Content-Type. Returns the full reply
+  // text, or null if nothing was rendered. The caller never adds the bubble.
   const chat = useCallback(
     async (history: Message[]) => {
+      setTyping(true);
+      let res: Response;
       try {
-        const res = await fetch("/api/chat", {
+        res = await fetch("/api/chat", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -136,13 +143,60 @@ export function LeadAssistant() {
             })),
           }),
         });
-        const data = await res.json();
-        return typeof data.reply === "string" ? data.reply : null;
       } catch {
+        setTyping(false);
         return null;
       }
+
+      // Non-streaming paths (demo fallback, 429) come back as JSON.
+      const contentType = res.headers.get("content-type") ?? "";
+      if (!res.body || contentType.includes("application/json")) {
+        setTyping(false);
+        try {
+          const data = await res.json();
+          const reply = typeof data.reply === "string" ? data.reply : null;
+          if (reply) addMessage("ai", reply);
+          return reply;
+        } catch {
+          return null;
+        }
+      }
+
+      // Streaming path: append tokens to a single AI bubble as they arrive.
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let acc = "";
+      let msgId: string | null = null;
+      const append = (chunk: string) => {
+        if (!chunk) return;
+        acc += chunk;
+        if (msgId === null) {
+          setTyping(false); // first token landed — drop the indicator
+          const id = nextId();
+          msgId = id;
+          setMessages((prev) => [...prev, { id, role: "ai", text: chunk }]);
+        } else {
+          const id = msgId;
+          setMessages((prev) =>
+            prev.map((m) => (m.id === id ? { ...m, text: m.text + chunk } : m)),
+          );
+        }
+      };
+      try {
+        for (;;) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          append(decoder.decode(value, { stream: true }));
+        }
+        append(decoder.decode());
+      } catch {
+        /* partial text stays on screen */
+      } finally {
+        setTyping(false);
+      }
+      return msgId === null ? null : acc;
     },
-    [],
+    [addMessage],
   );
 
   const handleSelect = useCallback(
@@ -208,20 +262,17 @@ export function LeadAssistant() {
 
       if (step === "followup") {
         const history = [...messages, { id: nextId(), role: "user" as Role, text: value }];
-        setTyping(true);
-        const reply = await chat(history);
-        setTyping(false);
-        if (reply) addMessage("ai", reply);
+        await chat(history); // renders the streamed/JSON reply itself
         await askForEmail();
         return;
       }
 
       // step === "done": free-form Q&A routed to Claude.
       const history = [...messages, { id: nextId(), role: "user" as Role, text: value }];
-      setTyping(true);
       const reply = await chat(history);
-      setTyping(false);
-      addMessage("ai", reply ?? `You can reach ${SARAH.firstName} any time on her calendar above.`);
+      if (reply === null) {
+        addMessage("ai", `You can reach ${SARAH.firstName} any time on her calendar above.`);
+      }
     },
     [textInput, step, messages, addMessage, aiSay, submitLead, chat, askForEmail],
   );
