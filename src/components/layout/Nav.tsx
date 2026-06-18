@@ -30,7 +30,7 @@ export function Nav() {
   return (
     <header className={classes}>
       <div className={styles.inner}>
-        <Link href="/" className={styles.brand} aria-label="Sara Mitchell — home">
+        <Link href="/" className={styles.brand} aria-label="Sara Mitchell, home">
           Sara<span className={styles.dot}>.</span>
         </Link>
 

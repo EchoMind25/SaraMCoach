@@ -16,7 +16,7 @@ import styles from "./services.module.css";
 export const metadata: Metadata = pageMetadata({
   title: "Services",
   description:
-    "Work with Sara Mitchell: The Pivot Protocol — a 90-day 1:1 intensive — and The Clarity Circle group coaching. Clear outcomes, evidence-based frameworks.",
+    "Two ways to work with Sara Mitchell: the Pivot Protocol, a private six-month 1:1, or the Inner Circle small group. Six clients at a time, by application.",
   path: "/services",
 });
 
@@ -27,11 +27,11 @@ const STEPS = [
   },
   {
     title: "We map your situation",
-    body: "If it's a yes, we turn the fog into a clear picture of what's actually going on — and where you want to go.",
+    body: "If it's a yes, we turn the fog into a clear picture of what's actually going on and where you want to go.",
   },
   {
     title: "You start the work",
-    body: "Structured sessions, real frameworks, and the accountability to act on what we uncover — week over week.",
+    body: "Structured sessions, real frameworks, and the accountability to act on what we uncover, week over week.",
   },
 ];
 

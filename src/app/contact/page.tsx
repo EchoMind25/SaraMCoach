@@ -11,7 +11,7 @@ import styles from "./contact.module.css";
 export const metadata: Metadata = pageMetadata({
   title: "Contact",
   description:
-    "Book a free 30-minute intro call with Sara Mitchell, or send a message. Sara replies personally within one business day.",
+    "Book a free 30-minute intro call with Sara Mitchell, or send a message. She reads every one herself and replies within one business day. Six spots open now.",
   path: "/contact",
 });
 
@@ -26,7 +26,7 @@ export default function ContactPage() {
             <span className="text-gradient">next move.</span>
           </>
         }
-        lead={`Pick a time below for a free, no-pressure intro call — or send a message and I'll reply personally within ${SARAH.responseSla}.`}
+        lead={`Pick a time below for a free, no-pressure intro call, or send a message and I'll reply personally within ${SARAH.responseSla}.`}
       />
 
       {/* ===== BOOKING (primary) ===== */}
@@ -52,7 +52,7 @@ export default function ContactPage() {
               Send a message
             </SectionTitle>
             <p className={styles.formLead}>
-              No forms to jump through and no qualifying questions — just say
+              No forms to jump through and no qualifying questions. Just say
               hello and tell me what&apos;s going on.
             </p>
             <ContactForm />
@@ -65,7 +65,7 @@ export default function ContactPage() {
                 {SARAH.email}
               </a>
               <p className={styles.infoText}>
-                I reply to every message personally — usually within{" "}
+                I reply to every message personally, usually within{" "}
                 {SARAH.responseSla}. If we&apos;re a fit, the next step is a quick
                 call. If we&apos;re not, I&apos;ll point you somewhere that is.
               </p>

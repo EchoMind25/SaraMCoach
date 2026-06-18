@@ -19,15 +19,15 @@ const esc = (s: string) =>
 /** Internal alert sent to the coach when a lead is captured. */
 export function coachAlertEmail(lead: Lead): { subject: string; html: string } {
   return {
-    subject: `New lead from your website — ${lead.email}`,
+    subject: `New lead from your website: ${lead.email}`,
     html: `
       <div style="font-family:Arial,Helvetica,sans-serif;max-width:520px;margin:0 auto;color:#1a1a2e">
         <h2 style="margin:0 0 12px">New lead captured</h2>
         <p style="margin:4px 0"><strong>Email:</strong> ${esc(lead.email)}</p>
-        <p style="margin:4px 0"><strong>Interested in:</strong> ${esc(lead.inquiryType ?? "—")}</p>
-        <p style="margin:4px 0"><strong>Notes:</strong> ${esc(lead.detail ?? "—")}</p>
+        <p style="margin:4px 0"><strong>Interested in:</strong> ${esc(lead.inquiryType ?? "(none)")}</p>
+        <p style="margin:4px 0"><strong>Notes:</strong> ${esc(lead.detail ?? "(none)")}</p>
         <p style="margin:16px 0 0;color:#8888aa;font-size:12px">
-          Captured by ${SARAH.firstName}'s assistant · session ${esc(lead.sessionId ?? "—")} · demonstration site
+          Captured by ${SARAH.firstName}'s assistant · session ${esc(lead.sessionId ?? "(none)")} · demonstration site
         </p>
       </div>`,
   };
@@ -36,7 +36,7 @@ export function coachAlertEmail(lead: Lead): { subject: string; html: string } {
 /** Branded confirmation sent to the visitor, with the demo disclaimer. */
 export function leadConfirmationEmail(): { subject: string; html: string } {
   return {
-    subject: `Thanks for reaching out — your next step (demo)`,
+    subject: `Thanks for reaching out, your next step (demo)`,
     html: `
   <body style="margin:0;padding:0;background:#0a0a12;">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#0a0a12;padding:32px 16px;">
@@ -44,10 +44,10 @@ export function leadConfirmationEmail(): { subject: string; html: string } {
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;background:#1a1a2e;border:1px solid rgba(255,255,255,0.08);border-radius:20px;overflow:hidden;">
           <tr><td style="height:4px;background:linear-gradient(90deg,#6c63ff,#a78bfa);"></td></tr>
           <tr><td style="padding:32px 32px 8px;font-family:Arial,Helvetica,sans-serif;">
-            <p style="margin:0 0 6px;color:#6c63ff;font-size:12px;letter-spacing:0.16em;text-transform:uppercase;">Mindset &amp; Performance Coaching</p>
+            <p style="margin:0 0 6px;color:#6c63ff;font-size:12px;letter-spacing:0.16em;text-transform:uppercase;">Business &amp; Life Coaching</p>
             <h1 style="margin:0 0 14px;color:#f0f0ff;font-size:26px;line-height:1.2;">Thanks for reaching out.</h1>
             <p style="margin:0 0 20px;color:#c9c9e0;font-size:15px;line-height:1.7;">
-              Great to connect. The best next step is a short, no-pressure intro call — grab whatever time works for you:
+              Great to connect. The best next step is a short, no-pressure intro call. Grab whatever time works for you:
             </p>
             <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 0 24px;">
               <tr><td style="border-radius:8px;background:linear-gradient(135deg,#6c63ff,#a78bfa);">

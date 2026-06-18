@@ -15,7 +15,7 @@ export default function NotFound() {
           <span className="text-gradient">unexpected pivot.</span>
         </SectionTitle>
         <p className={styles.lead}>
-          The page you&apos;re looking for isn&apos;t here — but your next move
+          The page you&apos;re looking for isn&apos;t here, but your next move
           might be one conversation away.
         </p>
         <div className={styles.actions}>

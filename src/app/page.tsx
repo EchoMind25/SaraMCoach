@@ -14,15 +14,15 @@ import { OFFERS, TESTIMONIALS } from "@/lib/content";
 import styles from "./page.module.css";
 
 const HERO_STATS = [
-  { value: "90 days", label: "To a clear next move" },
-  { value: "200+", label: "Professionals coached" },
-  { value: "32–50", label: "Mid-career focus" },
+  { value: "6", label: "Private clients at a time" },
+  { value: "200+", label: "Careers moved since 2019" },
+  { value: "90 days", label: "To a real plan" },
 ];
 
 const SIGNS = [
   {
     title: "You've hit the targets",
-    body: "Title, comp, the résumé people envy. On paper, you've made it.",
+    body: "Title, comp, the résumé other people envy. On paper, you've made it.",
   },
   {
     title: "But it feels off",
@@ -30,7 +30,7 @@ const SIGNS = [
   },
   {
     title: "You're ready to move",
-    body: "Not a reckless leap — a clear, deliberate next move you can commit to.",
+    body: "A clear, deliberate move you can commit to. Nothing reckless about it.",
   },
 ];
 
@@ -44,30 +44,28 @@ export default function Home() {
 
         <div className={`container ${styles.heroInner}`}>
           <div className={`${styles.fadeUp} ${styles.d1} ${styles.heroEyebrow}`}>
-            <SectionEyebrow>Mindset &amp; Performance Coaching</SectionEyebrow>
-            <Badge>Now booking · 1:1 + Group</Badge>
+            <SectionEyebrow>Business &amp; Life Coaching</SectionEyebrow>
+            <Badge>Now booking · 6 private seats</Badge>
           </div>
 
           <h1 className={`${styles.heroTitle} ${styles.fadeUp} ${styles.d2}`}>
-            From burned out
+            Business and life coaching for
             <br />
-            <span className="text-gradient">to dialed in.</span>
+            <span className="text-gradient">people done playing small.</span>
           </h1>
 
           <p className={`${styles.heroLead} ${styles.fadeUp} ${styles.d3}`}>
-            I&apos;m Sara Mitchell — a mindset and performance coach for
-            mid-career professionals who look successful on paper but feel stuck
-            underneath. Together we rebuild clarity, momentum, and a career that
-            actually fits. No fluff. No burnout as usual.
+            I&apos;m Sara. I work with people who look successful from the
+            outside and feel stuck on the inside. You&apos;ve hit the targets,
+            and somewhere along the way the work stopped fitting. I help you name
+            your next move and build the plan, the scripts, and the spine to
+            actually make it.
           </p>
 
           <div className={`${styles.heroCtas} ${styles.fadeUp} ${styles.d4}`}>
             <Button href="/contact" variant="primary">
               Book a Call
             </Button>
-            <Link href="/services" className={styles.textLink}>
-              See how we&apos;d work together →
-            </Link>
           </div>
 
           <div className={`${styles.heroStats} ${styles.fadeUp} ${styles.d5}`}>
@@ -118,9 +116,9 @@ export default function Home() {
               <span className="text-gradient">So why does it feel wrong?</span>
             </SectionTitle>
             <p className={styles.sectionLead}>
-              Most of my clients aren&apos;t failing. They&apos;re succeeding at
-              something that no longer fits — and they&apos;re tired of pretending
-              it does.
+              Most of my clients aren&apos;t failing. They&apos;re winning at
+              something that stopped fitting years ago, and they&apos;re tired of
+              pretending it still does.
             </p>
           </Reveal>
 
@@ -138,9 +136,8 @@ export default function Home() {
 
           <Reveal>
             <Callout variant="indigo" label="Who this is for">
-              Corporate professionals, roughly 32–50. High achievers who&apos;ve
-              hit the targets and still feel misaligned — and are finally ready to
-              do something about it.
+              High performers in their 30s and 40s who&apos;ve hit the targets,
+              still feel misaligned, and are finally done waiting to fix it.
             </Callout>
           </Reveal>
         </div>
@@ -155,8 +152,8 @@ export default function Home() {
               Two ways to work <span className="text-gradient">together.</span>
             </SectionTitle>
             <p className={styles.sectionLead}>
-              Focused 1:1 attention or the momentum of a group — same work, two
-              ways in.
+              Private 1:1 attention or a small room of people doing the same
+              work. Two ways in, one standard.
             </p>
           </Reveal>
 
@@ -177,7 +174,7 @@ export default function Home() {
                       </span>
                     ) : null}
                     <Link href="/services" className={styles.textLink}>
-                      Details →
+                      See how it works →
                     </Link>
                   </div>
                 </GlassCard>
@@ -195,7 +192,7 @@ export default function Home() {
             <span className="text-gradient">aligned again.</span>
           </>
         }
-        lead="One conversation. We'll figure out whether the Pivot Protocol or the Clarity Circle is the right next step for you."
+        lead="One honest conversation to figure out whether the Pivot Protocol or the Inner Circle is your next move. Six private spots, and they fill."
       />
     </main>
   );

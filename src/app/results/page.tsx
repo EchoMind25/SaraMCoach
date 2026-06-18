@@ -10,7 +10,7 @@ import styles from "./results.module.css";
 export const metadata: Metadata = pageMetadata({
   title: "Results",
   description:
-    "Real outcomes from senior professionals who worked with Sara Mitchell — from quietly stuck to clear, energized, and moving.",
+    "Real outcomes from people who worked with Sara Mitchell, from quietly stuck to a 22 percent raise, a VP title, and rates raised 40 percent. See the proof here.",
   path: "/results",
 });
 
@@ -21,11 +21,11 @@ const CASE_STUDY = [
   },
   {
     label: "The work",
-    text: "Over the Pivot Protocol's 90 days, we separated genuine misalignment from burnout, rebuilt her decision-making under pressure, and designed a move she could fully stand behind.",
+    text: "Across the Pivot Protocol's six months, we separated genuine misalignment from burnout, rebuilt her decision-making under pressure, and designed a move she could fully stand behind.",
   },
   {
     label: "The result",
-    text: "She didn't quit. She negotiated a redefined role and a new team-lead hire — and took her first real vacation in three years. She called it “the clearest I've felt in a decade.”",
+    text: "She didn't quit. She negotiated a redefined role and a new team-lead hire, then took her first real vacation in three years. She called it “the clearest I've felt in a decade.”",
   },
 ];
 
@@ -40,7 +40,7 @@ export default function ResultsPage() {
             <span className="text-gradient">genuinely moving.</span>
           </>
         }
-        lead="Coaching is a trust business, so I'll let the work speak. Here are senior professionals who were successful and stuck — and what shifted once they did the work."
+        lead="Coaching is a trust business, so I'll let the work speak. Here are people who were successful and stuck, and what shifted once they did the work."
       />
 
       {/* ===== TESTIMONIALS ===== */}

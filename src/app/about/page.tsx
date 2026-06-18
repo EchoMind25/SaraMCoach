@@ -10,22 +10,22 @@ import styles from "./about.module.css";
 export const metadata: Metadata = pageMetadata({
   title: "About",
   description:
-    "Meet Sara Mitchell — a former finance leader turned mindset and performance coach who helps mid-career professionals rebuild clarity and momentum.",
+    "Sara Mitchell spent ten years in corporate HR watching good people get overlooked. Now she coaches high performers in Nashville and beyond into their next move.",
   path: "/about",
 });
 
 const STORY = [
   {
     label: "Then",
-    text: "For fifteen years I climbed the ladder everyone told me to climb. I led finance teams, hit every number, and collected the titles. From the outside it looked like success. Inside, I was running on empty.",
+    text: "I spent ten years in corporate HR with a front-row seat to every promotion, every raise, and every quiet exit. I watched talented people stall out for one reason. Nobody had taught them how to advocate for themselves.",
   },
   {
     label: "The shift",
-    text: "The wake-up call wasn't dramatic — it was an ordinary Tuesday. I realized I'd built a career that impressed everyone but me, and that the very drive that got me there was quietly burning me out.",
+    text: "I got tired of watching it from the sidelines. The people who needed help most were the ones who looked fine on paper, so no one ever offered. I left to do something about it on purpose.",
   },
   {
     label: "Now",
-    text: "So I retrained: in coaching, in performance psychology, in how high achievers actually change. Today I help professionals like the person I was — capable, accomplished, and ready for work that finally fits.",
+    text: "I run my coaching practice from Nashville and work with clients everywhere. They're the same people I used to watch get passed over. Capable, accomplished, and done waiting for permission to make their move.",
   },
 ];
 
@@ -39,7 +39,7 @@ export default function AboutPage() {
             Hi, I&apos;m <span className="text-gradient">Sara.</span>
           </>
         }
-        lead="A former finance leader who learned the hard way that a career can look right and feel wrong at the same time — and that you can change that without blowing it all up."
+        lead="Ten years in corporate HR taught me that a career can look right and feel wrong at the same time. It also taught me you can change that without blowing up your life."
       />
 
       <section className={styles.section}>
@@ -50,7 +50,7 @@ export default function AboutPage() {
                 SM
               </div>
               <figcaption className={styles.portraitCaption}>
-                Sara Mitchell, PCC
+                Sara Mitchell, Nashville
               </figcaption>
             </figure>
           </Reveal>

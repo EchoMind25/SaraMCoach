@@ -18,8 +18,8 @@ export function Footer() {
             Sara<span className={styles.dot}>.</span>
           </Link>
           <p className={styles.tagline}>
-            Mindset &amp; performance coaching for mid-career professionals ready
-            to move from burned out to dialed in.
+            Business and life coaching for high performers who are done playing
+            small and ready to make their next move.
           </p>
         </div>
 

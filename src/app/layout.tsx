@@ -28,25 +28,25 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Sara Mitchell — Mindset Coach for Professionals",
+    default: "Sara Mitchell | Business & Life Coaching for High Performers",
     template: "%s · Sara Mitchell",
   },
   description:
-    "Sara Mitchell is a mindset and performance coach for mid-career professionals who look successful but feel stuck or burned out. Evidence-based 1:1 and group coaching to realign your career.",
+    "Sara Mitchell coaches high performers who look successful and feel stuck into their next real move. Private 1:1 and a small group. Six spots, by application.",
   metadataBase: new URL("https://saramcoach.com"),
   openGraph: {
-    title: "Sara Mitchell — Mindset Coach for Professionals",
+    title: "Sara Mitchell | Business & Life Coaching for High Performers",
     description:
-      "Evidence-based mindset and performance coaching for mid-career professionals ready to move from burned out to dialed in.",
+      "Coaching for people who are done playing small. Private 1:1 and a small group, six clients at a time. Book a quiet, no-pressure call.",
     type: "website",
     siteName: "Sara Mitchell Coaching",
     url: "/",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Sara Mitchell — Mindset Coach for Professionals",
+    title: "Sara Mitchell | Business & Life Coaching for High Performers",
     description:
-      "Evidence-based mindset and performance coaching for mid-career professionals ready to move from burned out to dialed in.",
+      "Coaching for people who are done playing small. Private 1:1 and a small group, six clients at a time. Book a quiet, no-pressure call.",
   },
 };
 

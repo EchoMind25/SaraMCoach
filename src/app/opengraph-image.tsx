@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "Sara Mitchell — Mindset Coach for Professionals";
+export const alt = "Sara Mitchell, Business and Life Coach for High Performers";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -34,14 +34,14 @@ export default function OpengraphImage() {
               letterSpacing: "0.18em",
             }}
           >
-            MINDSET &amp; PERFORMANCE COACHING
+            BUSINESS &amp; LIFE COACHING
           </div>
           <div style={{ display: "flex", flexDirection: "column" }}>
             <div style={{ display: "flex", color: "#F0F0FF", fontSize: 92, fontWeight: 800, letterSpacing: "-0.03em" }}>
-              From burned out
+              For people done
             </div>
             <div style={{ display: "flex", color: "#A78BFA", fontSize: 92, fontWeight: 800, letterSpacing: "-0.03em" }}>
-              to dialed in.
+              playing small.
             </div>
           </div>
         </div>
@@ -68,7 +68,7 @@ export default function OpengraphImage() {
               Sara Mitchell
             </div>
             <div style={{ display: "flex", color: "#8888AA", fontSize: 22 }}>
-              Mindset &amp; Performance Coach for Professionals
+              Business &amp; Life Coach for High Performers
             </div>
           </div>
         </div>
