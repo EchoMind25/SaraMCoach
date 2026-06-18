@@ -13,7 +13,7 @@
   --color-indigo:     #6C63FF;              /* Primary accent — CTAs, highlights, glows */
   --color-violet:     #A78BFA;              /* Secondary accent — gradients, hover states */
   --color-ghost:      #F0F0FF;              /* Primary text */
-  --color-muted:      #8888AA;              /* Secondary text, labels, placeholders */
+  --color-muted:      #9E9EC4;              /* Secondary text, labels, placeholders — WCAG AA (≥4.5:1) on void/navy/slate */
   --color-border:     rgba(255, 255, 255, 0.08);   /* Default border */
   --color-border-hot: rgba(108, 99, 255, 0.35);    /* Hover / active border */
   --color-glass-bg:   rgba(255, 255, 255, 0.04);   /* Glass card fill */
