@@ -1,0 +1,74 @@
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  padding: 14px 32px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  letter-spacing: -0.01em;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  isolation: isolate;
+  transition:
+    transform var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out);
+}
+
+.label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+.btn:disabled:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+/* ---------- Primary — gradient fill ---------- */
+.primary {
+  background: var(--gradient-primary);
+  color: #fff;
+  box-shadow: var(--shadow-subtle);
+}
+
+.primary:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-glow);
+}
+
+.primary:active {
+  transform: translateY(0);
+}
+
+/* ---------- Ghost — glass ---------- */
+.ghost {
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  border-color: var(--color-border);
+  color: var(--color-ghost);
+}
+
+.ghost:hover {
+  transform: translateY(-2px);
+  border-color: var(--color-indigo);
+}
+
+.ghost:active {
+  transform: translateY(0);
+}

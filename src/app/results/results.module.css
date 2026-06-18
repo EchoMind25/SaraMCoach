@@ -1,0 +1,147 @@
+.main {
+  display: flex;
+  flex-direction: column;
+}
+
+.section {
+  padding-block: var(--space-3xl);
+}
+
+/* ---------- Testimonials ---------- */
+.testimonialGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-md);
+}
+
+.testimonialCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  height: 100%;
+}
+
+.quote {
+  flex: 1;
+  font-size: var(--text-base);
+  color: var(--color-ghost);
+  line-height: 1.7;
+}
+
+.person {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--gradient-primary);
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  color: #fff;
+}
+
+.personMeta {
+  display: flex;
+  flex-direction: column;
+}
+
+.personName {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--color-ghost);
+}
+
+.personRole {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: var(--text-xs);
+  color: var(--color-muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.context {
+  align-self: flex-start;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: var(--text-xs);
+  color: var(--color-indigo);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border: 1px solid var(--color-border-hot);
+  border-radius: 20px;
+}
+
+/* ---------- Case study ---------- */
+.sectionAlt {
+  position: relative;
+  padding-block: var(--space-3xl);
+  background: var(--color-navy);
+  border-top: 1px solid var(--glass-border);
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.sectionInner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+.sectionHead {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  max-width: 760px;
+}
+
+.caseCard {
+  padding: clamp(var(--space-lg), 4vw, var(--space-2xl));
+}
+
+.caseGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-xl);
+}
+
+.casePart {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.caseLabel {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: var(--text-xs);
+  color: var(--color-indigo);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding-bottom: var(--space-xs);
+  border-bottom: 1px solid var(--color-border-hot);
+}
+
+.caseText {
+  font-size: var(--text-sm);
+  color: var(--color-ghost);
+  line-height: 1.75;
+}
+
+@media (max-width: 900px) {
+  .testimonialGrid {
+    grid-template-columns: 1fr;
+  }
+  .caseGrid {
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+  }
+}

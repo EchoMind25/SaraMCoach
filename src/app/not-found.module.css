@@ -1,0 +1,74 @@
+.main {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% -10%, rgba(108, 99, 255, 0.08), transparent 60%),
+    var(--color-void);
+}
+
+.glow {
+  position: absolute;
+  top: -160px;
+  right: -120px;
+  width: min(560px, 70vw);
+  height: min(560px, 70vw);
+  background: var(--gradient-glow);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: nfFloat 8s ease-in-out infinite;
+}
+
+.inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-md);
+  padding-block: calc(var(--nav-height) + var(--space-2xl)) var(--space-2xl);
+  max-width: 720px;
+}
+
+.code {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: clamp(4rem, 14vw, 9rem);
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  line-height: 1;
+  color: rgba(108, 99, 255, 0.25);
+}
+
+.lead {
+  font-size: var(--text-md);
+  color: var(--color-muted);
+  line-height: 1.8;
+  max-width: 52ch;
+}
+
+.actions {
+  display: flex;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+  margin-top: var(--space-sm);
+}
+
+@keyframes nfFloat {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translateY(-16px) scale(1.05);
+    opacity: 0.9;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glow {
+    animation: none;
+  }
+}

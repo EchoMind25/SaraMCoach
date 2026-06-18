@@ -1,0 +1,94 @@
+.main {
+  display: flex;
+  flex-direction: column;
+}
+
+.section {
+  padding-block: var(--space-3xl) var(--space-2xl);
+}
+
+.bookingInner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.sectionAlt {
+  padding-block: var(--space-2xl) var(--space-3xl);
+  background: var(--color-navy);
+  border-top: 1px solid var(--glass-border);
+}
+
+.contactGrid {
+  display: grid;
+  grid-template-columns: 1.3fr 0.7fr;
+  gap: var(--space-2xl);
+  align-items: start;
+}
+
+.formCol {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.formTitle {
+  font-size: var(--text-2xl);
+}
+
+.formLead {
+  font-size: var(--text-base);
+  color: var(--color-muted);
+  line-height: 1.75;
+  max-width: 52ch;
+  margin-bottom: var(--space-sm);
+}
+
+.infoCol {
+  position: sticky;
+  top: calc(var(--nav-height) + var(--space-lg));
+}
+
+.infoCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.infoLabel {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: var(--text-xs);
+  color: var(--color-muted);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.infoEmail {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: var(--text-lg);
+  font-weight: 700;
+  color: var(--color-ghost);
+  letter-spacing: -0.01em;
+  transition: color var(--duration-fast) var(--ease-out);
+  width: fit-content;
+}
+
+.infoEmail:hover {
+  color: var(--color-indigo);
+}
+
+.infoText {
+  font-size: var(--text-sm);
+  color: var(--color-muted);
+  line-height: 1.7;
+}
+
+@media (max-width: 860px) {
+  .contactGrid {
+    grid-template-columns: 1fr;
+    gap: var(--space-xl);
+  }
+  .infoCol {
+    position: static;
+  }
+}

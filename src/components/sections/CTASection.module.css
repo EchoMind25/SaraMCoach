@@ -1,0 +1,31 @@
+.section {
+  position: relative;
+  padding-block: var(--space-3xl);
+}
+
+.inner {
+  display: flex;
+  flex-direction: column;
+}
+
+.band {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-md);
+  padding: clamp(var(--space-lg), 5vw, var(--space-2xl));
+  background:
+    radial-gradient(ellipse 70% 120% at 100% 0%, rgba(108, 99, 255, 0.12), transparent 60%),
+    var(--glass-bg);
+}
+
+.lead {
+  font-size: var(--text-md);
+  color: var(--color-muted);
+  line-height: 1.8;
+  max-width: 60ch;
+}
+
+.actions {
+  margin-top: var(--space-sm);
+}

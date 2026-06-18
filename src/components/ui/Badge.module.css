@@ -1,0 +1,13 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: var(--text-xs);
+  color: #fff;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 20px;
+  background: var(--gradient-primary);
+  white-space: nowrap;
+}

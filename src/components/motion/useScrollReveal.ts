@@ -1,0 +1,57 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+
+type Options = {
+  threshold?: number;
+  rootMargin?: string;
+  /** Stop observing after the first reveal. Defaults to true. */
+  once?: boolean;
+};
+
+/**
+ * useScrollReveal — fires `visible` when the element scrolls into view.
+ * Implements the §04 Motion Spec: threshold 0.12, rootMargin
+ * "0px 0px -40px 0px", unobserve once revealed. Honors reduced motion by
+ * revealing immediately with no transition.
+ */
+export function useScrollReveal<T extends HTMLElement = HTMLDivElement>({
+  threshold = 0.12,
+  rootMargin = "0px 0px -40px 0px",
+  once = true,
+}: Options = {}) {
+  const ref = useRef<T>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    if (
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
+      setVisible(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            setVisible(true);
+            if (once) observer.unobserve(entry.target);
+          } else if (!once) {
+            setVisible(false);
+          }
+        }
+      },
+      { threshold, rootMargin },
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [threshold, rootMargin, once]);
+
+  return { ref, visible };
+}
