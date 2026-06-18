@@ -1,4 +1,4 @@
-import { SARAH } from "./content";
+import { OFFERS, SARAH } from "./content";
 
 /**
  * Client-safe configuration for the lead assistant widget (§06 flow).
@@ -45,3 +45,28 @@ export const EMAIL_INVALID = "Hmm, that doesn't look like a valid email. Mind tr
 export const CONFIRMATION = `Perfect. ${SARAH.firstName} will follow up with you personally. You can also grab a time on her calendar right now:`;
 
 export const BOOKING_LABEL = "Grab a time";
+
+/**
+ * A plain-language price summary for the Pricing branch, built from OFFERS so it
+ * always matches what the Services page shows. Surfaced before we ask for an
+ * email, so visitors see the numbers before we offer a personal follow-up.
+ */
+const pivot = OFFERS.find((o) => o.id === "pivot-protocol");
+const circle = OFFERS.find((o) => o.id === "clarity-circle");
+
+export function pricingSummary(choice: string): string {
+  const oneOnOne = pivot
+    ? `${pivot.title}, a six-month 1:1 at ${pivot.price}`
+    : "private 1:1 coaching";
+  const group = circle
+    ? `${circle.title} at ${circle.price} a month`
+    : "the small-group program";
+
+  if (choice === "Group program") {
+    return `That's ${group}. Two live coaching calls a month and a capped room of people doing the work.`;
+  }
+  if (choice === "1:1 coaching") {
+    return `That's ${oneOnOne}. ${SARAH.firstName} keeps it to six clients at a time, so spots are limited.`;
+  }
+  return `Two ways in: ${oneOnOne}, or ${group}. A quick call is the easiest way to see which one fits.`;
+}

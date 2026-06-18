@@ -37,8 +37,10 @@
   min-width: 320px;
   max-width: 540px;
   margin-inline: auto;
-  /* Calendly's date + time picker needs ~700px to show without clipping. */
-  height: 700px;
+  /* Sized to hug Calendly's date-selection view. Taller and Calendly's iframe
+     background shows as white space below the content; shorter and it clips.
+     The time-slot view scrolls internally within the iframe. */
+  height: 600px;
   border-radius: var(--radius-md);
   overflow: hidden;
 }
@@ -46,7 +48,6 @@
 @media (max-width: 560px) {
   .embed {
     max-width: none;
-    /* On narrow screens the picker stacks and needs more vertical room. */
-    height: 1000px;
+    height: 680px;
   }
 }

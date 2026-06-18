@@ -19,6 +19,7 @@ import {
   GREETING,
   INTENT_OPTIONS,
   INTENT_QUESTION,
+  pricingSummary,
   type Intent,
 } from "@/lib/assistant";
 import styles from "./LeadAssistant.module.css";
@@ -216,6 +217,11 @@ export function LeadAssistant() {
 
       if (step === "followup") {
         detailRef.current = value;
+        // In the pricing branch, state the numbers (from OFFERS) before we
+        // offer a personal follow-up and ask for an email.
+        if (intentRef.current === "Pricing") {
+          await aiSay(pricingSummary(value), 800);
+        }
         await askForEmail();
       }
     },
