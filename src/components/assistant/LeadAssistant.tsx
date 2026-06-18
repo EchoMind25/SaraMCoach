@@ -13,20 +13,14 @@ import {
   ASSISTANT,
   BOOKING_LABEL,
   CONFIRMATION,
-  EMAIL_INVALID,
-  EMAIL_PROMPT,
-  FOLLOWUP,
   GREETING,
+  INPUT_PLACEHOLDER,
   INTENT_OPTIONS,
-  INTENT_QUESTION,
-  pricingSummary,
-  type Intent,
 } from "@/lib/assistant";
 import styles from "./LeadAssistant.module.css";
 
 type Role = "ai" | "user";
 type Message = { id: string; role: Role; text: string };
-type Step = "intent" | "followup" | "email" | "done";
 
 const DISMISS_KEY = "sm-assistant-dismissed";
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -35,19 +29,29 @@ const SCROLL_TRIGGER = 0.4;
 
 const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
+// Detect a valid email anywhere in a message by reusing EMAIL_RE on each
+// whitespace token (after trimming wrapping punctuation). Returns it or null.
+const findEmail = (text: string): string | null => {
+  for (const raw of text.split(/\s+/)) {
+    const token = raw.replace(/^[<("']+|[>)"'.,;:!?]+$/g, "");
+    if (EMAIL_RE.test(token)) return token;
+  }
+  return null;
+};
+
 export function LeadAssistant() {
   const [open, setOpen] = useState(false);
   const [started, setStarted] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [typing, setTyping] = useState(false);
-  const [step, setStep] = useState<Step>("intent");
   const [options, setOptions] = useState<readonly string[] | null>(null);
   const [textInput, setTextInput] = useState("");
-  const [emailError, setEmailError] = useState(false);
   const [booked, setBooked] = useState(false);
 
-  const intentRef = useRef<Intent | null>(null);
-  const detailRef = useRef<string>("");
+  // inquiryType defaults to a generic label; a tapped quick-start overrides it.
+  const inquiryTypeRef = useRef<string>("General enquiry");
+  // Guards the lead POST so it fires exactly once per session.
+  const leadSubmittedRef = useRef(false);
   const sessionIdRef = useRef<string>("");
   const scrollRef = useRef<HTMLDivElement>(null);
   const idRef = useRef(0);
@@ -108,21 +112,16 @@ export function LeadAssistant() {
     };
   }, [openAssistant]);
 
-  // Kick off the scripted conversation the first time the panel opens.
+  // Greet once when the panel first opens, then surface the optional
+  // quick-starts. The input is live from here on; the visitor can type instead.
   useEffect(() => {
     if (!open || started) return;
     setStarted(true);
     (async () => {
       await aiSay(GREETING, 500);
-      await aiSay(INTENT_QUESTION, 850);
       setOptions(INTENT_OPTIONS);
     })();
   }, [open, started, aiSay]);
-
-  const askForEmail = useCallback(async () => {
-    await aiSay(EMAIL_PROMPT, 700);
-    setStep("email");
-  }, [aiSay]);
 
   // Sends the history to /api/chat and renders the reply. The route streams
   // plain text when a key is set (tokens appended to an in-flight AI bubble,
@@ -201,87 +200,84 @@ export function LeadAssistant() {
     [addMessage],
   );
 
-  const handleSelect = useCallback(
-    async (value: string) => {
+  // Lead capture (same payload + endpoint as before). Detail is the visitor's
+  // own words so far; inquiryType is the tapped quick-start or a generic label.
+  const submitLead = useCallback(
+    async (email: string, detail: string, inquiryType: string) => {
+      try {
+        await fetch("/api/lead", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email,
+            inquiryType,
+            detail,
+            sessionId: sessionIdRef.current,
+          }),
+        });
+      } catch {
+        /* confirmation still shows; lead retry is out of scope */
+      }
+    },
+    [],
+  );
+
+  // Every visitor turn (typed or seeded by a quick-start) flows through here:
+  // capture a lead deterministically if an email appears, then send the turn to
+  // Claude so it answers and, when an email was just given, confirms naturally.
+  const sendUserMessage = useCallback(
+    async (raw: string) => {
+      const value = raw.trim();
+      if (!value) return;
       setOptions(null);
       addMessage("user", value);
 
-      if (step === "intent") {
-        intentRef.current = value as Intent;
-        setStep("followup");
-        const branch = FOLLOWUP[value as Intent];
-        await aiSay(branch.prompt, 750);
-        if (branch.options) setOptions(branch.options);
-        return;
+      const email = findEmail(value);
+      if (email && !leadSubmittedRef.current) {
+        leadSubmittedRef.current = true;
+        const detail = messages
+          .filter((m) => m.role === "user")
+          .map((m) => m.text)
+          .join(" | ")
+          .slice(0, 1000);
+        submitLead(email, detail, inquiryTypeRef.current);
+        setBooked(true);
       }
 
-      if (step === "followup") {
-        detailRef.current = value;
-        // In the pricing branch, state the numbers (from OFFERS) before we
-        // offer a personal follow-up and ask for an email.
-        if (intentRef.current === "Pricing") {
-          await aiSay(pricingSummary(value), 800);
-        }
-        await askForEmail();
+      const history = [
+        ...messages,
+        { id: nextId(), role: "user" as Role, text: value },
+      ];
+      const reply = await chat(history);
+      if (reply === null) {
+        addMessage(
+          "ai",
+          email
+            ? CONFIRMATION
+            : `You can reach ${SARAH.firstName} any time on her calendar above.`,
+        );
       }
     },
-    [step, addMessage, aiSay, askForEmail],
+    [messages, addMessage, submitLead, chat],
   );
 
-  const submitLead = useCallback(async (email: string) => {
-    try {
-      await fetch("/api/lead", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email,
-          inquiryType: intentRef.current,
-          detail: detailRef.current,
-          sessionId: sessionIdRef.current,
-        }),
-      });
-    } catch {
-      /* confirmation still shows — lead retry is a Phase 4 concern */
-    }
-  }, []);
+  // Quick-start tap: record it as the inquiry type, then send it like a message.
+  const handleSelect = useCallback(
+    async (value: string) => {
+      inquiryTypeRef.current = value;
+      await sendUserMessage(value);
+    },
+    [sendUserMessage],
+  );
 
   const handleText = useCallback(
     async (e: FormEvent) => {
       e.preventDefault();
-      const value = textInput.trim();
-      if (!value) return;
+      const value = textInput;
       setTextInput("");
-      addMessage("user", value);
-
-      if (step === "email") {
-        if (!EMAIL_RE.test(value)) {
-          setEmailError(true);
-          await aiSay(EMAIL_INVALID, 500);
-          return;
-        }
-        setEmailError(false);
-        await submitLead(value);
-        await aiSay(CONFIRMATION, 700);
-        setStep("done");
-        setBooked(true);
-        return;
-      }
-
-      if (step === "followup") {
-        const history = [...messages, { id: nextId(), role: "user" as Role, text: value }];
-        await chat(history); // renders the streamed/JSON reply itself
-        await askForEmail();
-        return;
-      }
-
-      // step === "done": free-form Q&A routed to Claude.
-      const history = [...messages, { id: nextId(), role: "user" as Role, text: value }];
-      const reply = await chat(history);
-      if (reply === null) {
-        addMessage("ai", `You can reach ${SARAH.firstName} any time on her calendar above.`);
-      }
+      await sendUserMessage(value);
     },
-    [textInput, step, messages, addMessage, aiSay, submitLead, chat, askForEmail],
+    [textInput, sendUserMessage],
   );
 
   const dismiss = useCallback(() => {
@@ -293,7 +289,6 @@ export function LeadAssistant() {
     }
   }, []);
 
-  const showText = step === "email" || step === "followup" || step === "done";
   const showOptions = options !== null && !typing;
 
   return (
@@ -403,36 +398,25 @@ export function LeadAssistant() {
               </div>
             )}
 
-            {showText && (
-              <form className={styles.inputRow} onSubmit={handleText}>
-                <input
-                  className={[styles.input, emailError && styles.inputError]
-                    .filter(Boolean)
-                    .join(" ")}
-                  value={textInput}
-                  onChange={(e) => setTextInput(e.target.value)}
-                  type={step === "email" ? "email" : "text"}
-                  inputMode={step === "email" ? "email" : "text"}
-                  placeholder={
-                    step === "email"
-                      ? "you@email.com"
-                      : step === "done"
-                        ? "Ask another question…"
-                        : "Type your answer…"
-                  }
-                  aria-label="Your message"
-                  autoComplete={step === "email" ? "email" : "off"}
-                />
-                <button
-                  type="submit"
-                  className={styles.send}
-                  aria-label="Send"
-                  disabled={!textInput.trim()}
-                >
-                  →
-                </button>
-              </form>
-            )}
+            <form className={styles.inputRow} onSubmit={handleText}>
+              <input
+                className={styles.input}
+                value={textInput}
+                onChange={(e) => setTextInput(e.target.value)}
+                type="text"
+                placeholder={INPUT_PLACEHOLDER}
+                aria-label="Your message"
+                autoComplete="off"
+              />
+              <button
+                type="submit"
+                className={styles.send}
+                aria-label="Send"
+                disabled={!textInput.trim()}
+              >
+                →
+              </button>
+            </form>
 
             <p className={styles.disclaimer}>
               {SARAH.firstName}&apos;s assistant · {DEMO.short}
