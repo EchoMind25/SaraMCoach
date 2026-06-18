@@ -20,6 +20,13 @@ export const DEMO = {
     "This website and its booking calendar are for demonstration purposes only. “Sara Mitchell” is a fictional coach — any message you send or time you book here is part of a demo and won’t create a real appointment or coaching relationship.",
 } as const;
 
+/** Contact form copy. Field labels stay inline in the form; these are the
+ *  states that change at runtime (submission + failure). */
+export const CONTACT = {
+  sending: "Sending…",
+  errorRetry: `Something went wrong sending your message. Please try again — or email ${SARAH.email} directly.`,
+} as const;
+
 export type Offer = {
   id: string;
   tag: string;

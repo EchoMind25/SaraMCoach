@@ -4,6 +4,17 @@
   gap: var(--space-md);
 }
 
+/* Honeypot — removed from layout and off-screen, but still fillable by bots.
+   Not display:none, which some bots skip. */
+.honeypot {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
 .field {
   display: flex;
   flex-direction: column;
@@ -54,6 +65,13 @@
 .error {
   font-size: var(--text-xs);
   color: var(--color-caution);
+}
+
+/* Form-level submit failure (network / non-2xx) */
+.formError {
+  font-size: var(--text-sm);
+  color: var(--color-caution);
+  line-height: 1.6;
 }
 
 /* ---------- Success ---------- */

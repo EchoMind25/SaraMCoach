@@ -22,9 +22,34 @@ type Lead = {
   detail?: string;
   name?: string;
   sessionId?: string;
+  /** Honeypot — hidden from humans; if filled, it's a bot. */
+  company?: string;
 };
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+// Best-effort per-IP limiter, mirroring the one in /api/chat: a Map keyed by
+// IP over a fixed 60s window. Resets on cold start / per serverless instance —
+// fine for the demo; production swaps this for a shared store (e.g. Upstash).
+const MAX_REQUESTS_PER_MINUTE = 5;
+const RATE_WINDOW_MS = 60_000;
+const ipHits = new Map<string, { count: number; resetAt: number }>();
+
+function clientIp(request: Request): string {
+  const forwarded = request.headers.get("x-forwarded-for");
+  return forwarded?.split(",")[0]?.trim() || "unknown";
+}
+
+function rateLimited(ip: string): boolean {
+  const now = Date.now();
+  const entry = ipHits.get(ip);
+  if (!entry || now >= entry.resetAt) {
+    ipHits.set(ip, { count: 1, resetAt: now + RATE_WINDOW_MS });
+    return false;
+  }
+  entry.count += 1;
+  return entry.count > MAX_REQUESTS_PER_MINUTE;
+}
 
 async function storeInSupabase(lead: Lead): Promise<void> {
   const url = process.env.SUPABASE_URL;
@@ -93,11 +118,24 @@ async function sendEmails(lead: Lead): Promise<void> {
 }
 
 export async function POST(request: Request) {
+  if (rateLimited(clientIp(request))) {
+    return Response.json(
+      { error: "Too many requests. Please try again in a minute." },
+      { status: 429 },
+    );
+  }
+
   let lead: Lead;
   try {
     lead = await request.json();
   } catch {
     return Response.json({ error: "Invalid JSON" }, { status: 400 });
+  }
+
+  // Honeypot: a real visitor never sees or fills this. Silently accept and
+  // drop — no storage, no email — so bots get no signal they were caught.
+  if (lead?.company && lead.company.trim()) {
+    return Response.json({ ok: true });
   }
 
   if (!lead?.email || !EMAIL_RE.test(lead.email)) {
