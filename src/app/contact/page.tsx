@@ -30,7 +30,7 @@ export default function ContactPage() {
       />
 
       {/* ===== BOOKING (primary) ===== */}
-      <section className={styles.section}>
+      <section id="book" className={styles.section}>
         <div className={`container ${styles.bookingInner}`}>
           <Reveal>
             <Callout variant="violet" label="Demonstration">

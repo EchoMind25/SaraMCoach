@@ -7,6 +7,7 @@ import {
   useState,
   type FormEvent,
 } from "react";
+import Link from "next/link";
 import { DEMO, SARAH } from "@/lib/content";
 import {
   ASSISTANT,
@@ -373,14 +374,9 @@ export function LeadAssistant() {
 
             {booked && (
               <div className={styles.bookingWrap}>
-                <a
-                  className={styles.bookingBtn}
-                  href={SARAH.calendly}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                <Link className={styles.bookingBtn} href="/contact#book">
                   {BOOKING_LABEL} →
-                </a>
+                </Link>
               </div>
             )}
           </div>
