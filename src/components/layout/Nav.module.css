@@ -1,7 +1,9 @@
 .nav {
   position: fixed;
   inset: 0 0 auto 0;
-  z-index: 100;
+  /* Above the chat widget (z-index 200) so the open mobile menu is never
+     covered by the assistant panel. */
+  z-index: 250;
   background: rgba(10, 10, 18, 0.7);
   -webkit-backdrop-filter: var(--glass-blur);
   backdrop-filter: var(--glass-blur);
@@ -65,10 +67,93 @@
   align-items: center;
 }
 
-/* Collapse the inline link list on small screens; keep brand + CTA.
-   (Full mobile menu lands in Phase 2.) */
+/* Hamburger button — hidden on desktop, shown on small screens. */
+.menuBtn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--glass-bg);
+  color: var(--color-ghost);
+  cursor: pointer;
+  transition: border-color var(--duration-fast) var(--ease-out);
+}
+
+.menuBtn:hover {
+  border-color: var(--color-border-hot);
+}
+
+.menuIcon {
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+/* Drop-down menu under the bar (mobile). */
+.mobileMenu {
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-xs) clamp(20px, 5vw, 40px) var(--space-sm);
+  background: rgba(10, 10, 18, 0.95);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  border-bottom: 1px solid var(--glass-border);
+  animation: navMenu var(--duration-base) var(--ease-out) both;
+}
+
+.mobileLink {
+  padding: 12px 4px;
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  border-bottom: 1px solid var(--color-border);
+  transition: color var(--duration-fast) var(--ease-out);
+}
+
+.mobileLink:last-child {
+  border-bottom: none;
+}
+
+.mobileLink:hover,
+.mobileLinkActive {
+  color: var(--color-ghost);
+}
+
+@keyframes navMenu {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Collapse the inline link list on small screens; the hamburger replaces it. */
 @media (max-width: 720px) {
   .links {
     display: none;
+  }
+  .menuBtn {
+    display: inline-flex;
+  }
+}
+
+/* The drop-down is only for the mobile breakpoint. */
+@media (min-width: 721px) {
+  .mobileMenu {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mobileMenu {
+    animation: none;
   }
 }

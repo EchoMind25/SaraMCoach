@@ -14,6 +14,7 @@ import styles from "./Nav.module.css";
  */
 export function Nav() {
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -22,6 +23,11 @@ export function Nav() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  // Close the mobile menu whenever the route changes.
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [pathname]);
 
   const classes = [styles.nav, scrolled && styles.scrolled]
     .filter(Boolean)
@@ -57,7 +63,41 @@ export function Nav() {
             Book a Call
           </Button>
         </div>
+
+        <button
+          type="button"
+          className={styles.menuBtn}
+          aria-label={menuOpen ? "Close menu" : "Open menu"}
+          aria-expanded={menuOpen}
+          aria-controls="mobile-nav"
+          onClick={() => setMenuOpen((v) => !v)}
+        >
+          <span className={styles.menuIcon} aria-hidden="true">
+            {menuOpen ? "×" : "☰"}
+          </span>
+        </button>
       </div>
+
+      {menuOpen && (
+        <nav id="mobile-nav" className={styles.mobileMenu} aria-label="Mobile">
+          {NAV_LINKS.map((link) => {
+            const active = pathname === link.href;
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={[styles.mobileLink, active && styles.mobileLinkActive]
+                  .filter(Boolean)
+                  .join(" ")}
+                aria-current={active ? "page" : undefined}
+                onClick={() => setMenuOpen(false)}
+              >
+                {link.label}
+              </Link>
+            );
+          })}
+        </nav>
+      )}
     </header>
   );
 }
