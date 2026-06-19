@@ -199,6 +199,14 @@
   font-size: var(--text-sm);
   line-height: 1.55;
   border-radius: var(--radius-md);
+  overflow-wrap: anywhere;
+}
+
+/* Inline link inside an assistant bubble (e.g. the booking link). */
+.msgLink {
+  color: var(--color-violet);
+  text-decoration: underline;
+  overflow-wrap: anywhere;
 }
 
 .bubbleAi {

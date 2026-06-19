@@ -6,6 +6,7 @@ import {
   useRef,
   useState,
   type FormEvent,
+  type ReactNode,
 } from "react";
 import Link from "next/link";
 import { DEMO, SARAH } from "@/lib/content";
@@ -38,6 +39,41 @@ const findEmail = (text: string): string | null => {
   }
   return null;
 };
+
+// Render assistant text with links instead of raw URLs. Any booking reference
+// (the external scheduler, a /contact path, or the production contact URL) is
+// rewritten to an on-site /contact#book link so the visitor stays on the site
+// with the embedded calendar. Other URLs become normal clickable links.
+const LINK_SPLIT = /(https?:\/\/\S+|(?<!\S)\/contact(?:#book)?)/g;
+const LINK_TEST = /^(?:https?:\/\/\S+|\/contact(?:#book)?)$/;
+const isBookingLink = (s: string) =>
+  /calendly\.com/i.test(s) ||
+  /saramcoach\.com\/contact/i.test(s) ||
+  /^\/contact(?:#book)?$/i.test(s);
+
+const renderAiText = (text: string): ReactNode =>
+  text.split(LINK_SPLIT).map((part, i) => {
+    if (!part) return null;
+    if (!LINK_TEST.test(part)) return part;
+    if (isBookingLink(part)) {
+      return (
+        <Link key={i} href="/contact#book" className={styles.msgLink}>
+          the Contact page
+        </Link>
+      );
+    }
+    return (
+      <a
+        key={i}
+        href={part}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={styles.msgLink}
+      >
+        {part}
+      </a>
+    );
+  });
 
 export function LeadAssistant() {
   const [open, setOpen] = useState(false);
@@ -355,7 +391,7 @@ export function LeadAssistant() {
                     m.role === "user" ? styles.bubbleUser : styles.bubbleAi,
                   ].join(" ")}
                 >
-                  {m.text}
+                  {m.role === "ai" ? renderAiText(m.text) : m.text}
                 </div>
               </div>
             ))}
